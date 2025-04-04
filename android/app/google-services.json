@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "311157187495",
+    "project_id": "finance-app-fcdfb",
+    "storage_bucket": "finance-app-fcdfb.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:311157187495:android:c2e351b13408e56f544c82",
+        "android_client_info": {
+          "package_name": "com.example.finance_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1rjivyTFxUfxjQ3JwdLCceyn0Mh7TV1w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
