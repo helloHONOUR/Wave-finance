@@ -1,3 +1,4 @@
+import 'package:finance_app/Screens%20/inputnumberscreen%20.dart';
 import 'package:finance_app/main.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -18,12 +19,16 @@ class _VerifycodeScreenState extends State<VerifycodeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       body: Container(
         padding: EdgeInsets.only(left: 20, right: 20),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Align(alignment: Alignment.topLeft, child: CustomPaint(size: Size(50, 150), painter: Logo())),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Container(child: CustomPaint(size: Size(50, 50), painter: Logo(10))),
+            ),
 
             Container(
               padding: EdgeInsets.only(bottom: 10, top: 10),

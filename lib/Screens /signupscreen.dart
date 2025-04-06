@@ -1,4 +1,7 @@
+import 'package:finance_app/auth/firebase_auth.dart';
 import 'package:finance_app/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class SignupScreen extends StatefulWidget {
@@ -21,7 +24,7 @@ class _SignupScreenState extends State<SignupScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Align(alignment: Alignment.topLeft, child: CustomPaint(size: Size(50, 150), painter: Logo())),
+            Align(alignment: Alignment.topLeft, child: CustomPaint(size: Size(50, 150), painter: Logo(100))),
 
             Container(
               padding: EdgeInsets.only(bottom: 10, top: 10),
@@ -43,7 +46,17 @@ class _SignupScreenState extends State<SignupScreen> {
             Padding(padding: EdgeInsets.only(bottom: 18)),
             CustomTextfield(passwordController, "Password"),
 
+            customButton(
+              context,
+              'Sign in',
+              onpressed: () {
+                Firebaseauthservice().createUser(nameController.text, emailController.text, passwordController.text);
+              },
+            ),
+            Padding(padding: EdgeInsets.only(bottom: 10)),
+
             Padding(padding: EdgeInsets.only(bottom: 30)),
+
             Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -83,7 +96,7 @@ class _SignupScreenState extends State<SignupScreen> {
             Column(
               children: [
                 TextButton(
-                  onPressed: () async {},
+                  onPressed: () {},
 
                   // icon: Image.asset("assets/google_logo.png", height: 24), // Google logo
                   style: ElevatedButton.styleFrom(

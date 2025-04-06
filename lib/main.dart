@@ -2,9 +2,14 @@ import 'package:finance_app/Screens%20/SignupScreen.dart';
 import 'package:finance_app/Screens%20/inputnumberscreen%20.dart';
 import 'package:finance_app/Screens%20/loginscreen.dart';
 import 'package:finance_app/Screens%20/verificationcodescreen.dart';
+import 'package:finance_app/auth/firebase_auth.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
   runApp(const MyApp());
 }
 
@@ -16,15 +21,37 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
-      home: InputPhoneNum(),
+      home: StreamBuilder(
+        stream: FirebaseAuth.instance.authStateChanges(),
+        builder: (BuildContext context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(child: CircularProgressIndicator());
+          }
+
+          if (snapshot.data == null) {
+            return SignupScreen();
+          }
+          if (snapshot.data != null) {
+            print('not null');
+            if (snapshot.data!.emailVerified == false) {
+              return InputPhoneNum();
+            }
+          }
+          return LoginScreenScreen();
+        },
+      ),
     );
   }
 }
 
 class Logo extends CustomPainter {
+  final double positionLogo;
+
+  const Logo(this.positionLogo);
+
   @override
   void paint(Canvas canvas, Size size) {
-    double appBarHeight = 100.0; // Default AppBar height in Flutter
+    double appBarHeight = positionLogo; // Default AppBar height in Flutter
     Rect rect = Offset(0, appBarHeight) & const Size(35.0, 35.0); // Positioned at the left, under AppBar
     double padding = rect.width * 0.24; // Space between lines and box edges
     double gap = (rect.width - (2 * padding)) / 3; // Equal spacing for the three lines

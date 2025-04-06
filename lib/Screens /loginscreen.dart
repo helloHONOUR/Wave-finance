@@ -21,7 +21,7 @@ class _LoginScreenScreenState extends State<LoginScreenScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Align(alignment: Alignment.topLeft, child: CustomPaint(size: Size(50, 150), painter: Logo())),
+            Align(alignment: Alignment.topLeft, child: CustomPaint(size: Size(50, 150), painter: Logo(100))),
 
             Row(
               children: [
