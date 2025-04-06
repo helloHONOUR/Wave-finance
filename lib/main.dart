@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
           }
 
           if (snapshot.data == null) {
-            return SignupScreen();
+            return InputPhoneNum();
           }
           if (snapshot.data != null) {
             print('not null');
