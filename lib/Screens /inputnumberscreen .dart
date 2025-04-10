@@ -3,7 +3,6 @@ import 'package:finance_app/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl_phone_field/intl_phone_field.dart';
 import 'package:intl_phone_field/countries.dart';
 
 class InputPhoneNum extends StatefulWidget {
@@ -69,12 +68,12 @@ class _InputPhoneNumState extends State<InputPhoneNum> {
                 child: Align(
                   alignment: Alignment.bottomCenter,
                   child: customButton(
-                    context,
-                    'Verify account',
-                    onpressed: () async {
-                      // await FirebaseAuth.instance.signOut();
+                    () async {
+                      await FirebaseAuth.instance.signOut();
                       Navigator.push(context, MaterialPageRoute(builder: (context) => VerifycodeScreen()));
                     },
+                    'Verify account',
+                    false,
                   ),
                 ),
               ),

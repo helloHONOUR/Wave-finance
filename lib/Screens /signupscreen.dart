@@ -1,8 +1,11 @@
+import 'package:finance_app/Screens%20/inputnumberscreen%20.dart';
+import 'package:finance_app/Screens%20/sendverificationemail.dart';
+import 'package:finance_app/Screens%20/verificationcodescreen.dart';
 import 'package:finance_app/auth/firebase_auth.dart';
 import 'package:finance_app/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class SignupScreen extends StatefulWidget {
   const SignupScreen({super.key});
@@ -45,14 +48,36 @@ class _SignupScreenState extends State<SignupScreen> {
 
             Padding(padding: EdgeInsets.only(bottom: 18)),
             CustomTextfield(passwordController, "Password"),
+            Consumer<FinanceappProvider>(
+              builder: (context, provider, child) {
+                return customButton(
+                  () {
+                    provider.createuser(nameController.text, emailController.text, passwordController.text).then((
+                      value,
+                    ) {
+                      print('after creating');
+                      print(value);
 
-            customButton(
-              context,
-              'Sign in',
-              onpressed: () {
-                Firebaseauthservice().createUser(nameController.text, emailController.text, passwordController.text);
+                      if (value.runtimeType == UserCredential) {
+                        if (context.mounted) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return VerifyEmailScreen();
+                              },
+                            ),
+                          );
+                        }
+                      }
+                    });
+                  },
+                  'Sign up',
+                  provider.isloading ? true : false,
+                );
               },
             ),
+
             Padding(padding: EdgeInsets.only(bottom: 10)),
 
             Padding(padding: EdgeInsets.only(bottom: 30)),

@@ -1,14 +1,16 @@
 import 'package:finance_app/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-class LoginScreenScreen extends StatefulWidget {
-  const LoginScreenScreen({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<LoginScreenScreen> createState() => _LoginScreenScreenState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenScreenState extends State<LoginScreenScreen> {
+class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
@@ -44,8 +46,15 @@ class _LoginScreenScreenState extends State<LoginScreenScreen> {
             Padding(padding: EdgeInsets.only(bottom: 18)),
 
             CustomTextfield(passwordController, "Password"),
+            customButton(
+              () {
+                //   FirebaseAuth.instance.verifyPhoneNumber(verificationCompleted: verificationCompleted, verificationFailed: verificationFailed, codeSent: codeSent, codeAutoRetrievalTimeout: codeAutoRetrievalTimeout)
+              },
+              'Sign in',
+              false,
+            ),
 
-            customButton(context, 'Sign in', onpressed: () {}),
+            // customButton(, 'Sign in', false, () {}),
             Padding(padding: EdgeInsets.only(bottom: 10)),
 
             Align(

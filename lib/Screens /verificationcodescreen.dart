@@ -1,5 +1,5 @@
-import 'package:finance_app/Screens%20/inputnumberscreen%20.dart';
 import 'package:finance_app/main.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
@@ -83,7 +83,13 @@ class _VerifycodeScreenState extends State<VerifycodeScreen> {
               child: SafeArea(
                 child: Align(
                   alignment: Alignment.bottomCenter,
-                  child: customButton(context, 'Verify account', onpressed: () {}),
+                  child: customButton(
+                    () {
+                      // FirebaseAuth.instance.signOut();
+                    },
+                    'Verify account',
+                    false,
+                  ),
                 ),
               ),
             ),

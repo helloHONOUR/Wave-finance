@@ -1,16 +1,20 @@
 import 'package:finance_app/Screens%20/SignupScreen.dart';
 import 'package:finance_app/Screens%20/inputnumberscreen%20.dart';
 import 'package:finance_app/Screens%20/loginscreen.dart';
+import 'package:finance_app/Screens%20/sendverificationemail.dart';
 import 'package:finance_app/Screens%20/verificationcodescreen.dart';
 import 'package:finance_app/auth/firebase_auth.dart';
+import 'package:finance_app/firebase_options.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  runApp(const MyApp());
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
+  runApp(MultiProvider(providers: [ChangeNotifierProvider(create: (_) => FinanceappProvider())], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -21,6 +25,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple)),
+      routes: {
+        'LoginView': (context) {
+          return LoginScreen();
+        },
+      },
       home: StreamBuilder(
         stream: FirebaseAuth.instance.authStateChanges(),
         builder: (BuildContext context, snapshot) {
@@ -29,15 +38,15 @@ class MyApp extends StatelessWidget {
           }
 
           if (snapshot.data == null) {
-            return InputPhoneNum();
+            return VerifyEmailScreen();
           }
           if (snapshot.data != null) {
-            print('not null');
             if (snapshot.data!.emailVerified == false) {
-              return InputPhoneNum();
+              print(snapshot.data);
+              return VerifyEmailScreen();
             }
           }
-          return LoginScreenScreen();
+          return LoginScreen();
         },
       ),
     );
@@ -129,7 +138,6 @@ class _CustomTextfieldState extends State<CustomTextfield> {
                         ishidetext = true;
                         passwordShowIcon = Icon(Icons.visibility_off);
                       }
-                      print(ishidetext);
                     });
                   },
                 )
@@ -147,29 +155,86 @@ class _CustomTextfieldState extends State<CustomTextfield> {
   }
 }
 
-Widget customButton(BuildContext context, String text, {VoidCallback? onpressed}) {
-  return Container(
-    padding: EdgeInsets.only(top: 30),
-    width: MediaQuery.of(context).size.width, // 70% of screen width
-    height: 105, // Increased height for better appearance
+class customButton extends StatefulWidget {
+  final Function? onpressed;
+  final dynamic text;
+  final bool isloading;
 
-    child: ElevatedButton(
-      onPressed: onpressed,
-      style: ElevatedButton.styleFrom(
-        backgroundColor: const Color.fromARGB(1000, 50, 66, 154), // Button color
-        shape: RoundedRectangleBorder(
-          borderRadius: const BorderRadius.all(Radius.circular(15.0)), // Rounded corners
-        ),
-      ),
+  const customButton(this.onpressed, this.text, this.isloading, {super.key});
 
-      child: Text(
-        text,
-        style: TextStyle(
-          fontSize: 18,
-          fontWeight: FontWeight.bold,
-          color: Colors.white, // Text color
-        ),
-      ),
-    ),
-  );
+  @override
+  State<customButton> createState() => _customButtonState();
 }
+
+class _customButtonState extends State<customButton> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(top: 30),
+      width: MediaQuery.of(context).size.width, // 70% of screen width
+      height: 105, // Increased height for better appearance
+
+      child: ElevatedButton(
+        onPressed: () {
+          if (widget.onpressed != null) {
+            widget.onpressed!();
+
+            // print(provider.isloading);
+          }
+        },
+        style: ElevatedButton.styleFrom(
+          backgroundColor: const Color.fromARGB(1000, 50, 66, 154), // Button color
+          shape: RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(Radius.circular(15.0)), // Rounded corners
+          ),
+        ),
+
+        child:
+            widget.isloading
+                ? CircularProgressIndicator(color: Colors.white)
+                : Text(
+                  widget.text,
+                  style: TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white, // Text color
+                  ),
+                ),
+      ),
+    );
+  }
+}
+
+// Widget customtton(BuildContext context, String text, {VoidCallback? onpressed}) {
+//   bool isloading = false;
+//   return Container(
+//     padding: EdgeInsets.only(top: 30),
+//     width: MediaQuery.of(context).size.width, // 70% of screen width
+//     height: 105, // Increased height for better appearance
+
+//     child: ElevatedButton(
+//       onPressed: () {
+//         isloading = true;
+//         onpressed;
+//       },
+//       style: ElevatedButton.styleFrom(
+//         backgroundColor: const Color.fromARGB(1000, 50, 66, 154), // Button color
+//         shape: RoundedRectangleBorder(
+//           borderRadius: const BorderRadius.all(Radius.circular(15.0)), // Rounded corners
+//         ),
+//       ),
+
+//       child:
+//           isloading
+//               ? CircularProgressIndicator()
+//               : Text(
+//                 text,
+//                 style: TextStyle(
+//                   fontSize: 18,
+//                   fontWeight: FontWeight.bold,
+//                   color: Colors.white, // Text color
+//                 ),
+//               ),
+//     ),
+//   );
+// }
