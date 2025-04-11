@@ -111,7 +111,22 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
               textAlign: TextAlign.center,
             ),
             SizedBox(height: 30),
-            customButton(() {}, 'Back to login', false),
+            customButton(
+              () {
+                if (user?.emailVerified ?? false) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return LoginScreen();
+                      },
+                    ),
+                  );
+                }
+              },
+              'Back to login',
+              false,
+            ),
             // ElevatedButton.icon(
             //   onPressed: () {},
             //   //  _canResendEmail ? sendVerificationEmail : null,
@@ -134,18 +149,6 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
             TextButton(
               onPressed: () {
                 // FirebaseAuth.instance.signOut();
-                if (user != null) {
-                  if (user.emailVerified) {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) {
-                          return LoginScreen();
-                        },
-                      ),
-                    );
-                  }
-                }
               },
               child: Text('Resend email'),
             ),

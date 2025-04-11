@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
           }
 
           if (snapshot.data == null) {
-            return VerifyEmailScreen();
+            return SignupScreen();
           }
           if (snapshot.data != null) {
             if (snapshot.data!.emailVerified == false) {
