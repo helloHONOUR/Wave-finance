@@ -10,17 +10,22 @@ abstract class Auth {
 }
 
 class Firebaseauthservice implements Auth {
+  static final _instance = Firebaseauthservice._private();
+  Firebaseauthservice._private();
+  factory Firebaseauthservice() => _instance;
+
   @override
   User? getCurrentUser() {
     return FirebaseAuth.instance.currentUser;
   }
 
   @override
-  void loginUser(String email, String password) async {
+  Future loginUser(String email, String password) async {
     UserCredential userCredential = await FirebaseAuth.instance.signInWithEmailAndPassword(
       email: email,
       password: password,
     );
+    return userCredential;
   }
 
   @override
@@ -30,7 +35,6 @@ class Firebaseauthservice implements Auth {
       password: password,
     );
     await userCredential.user!.updateDisplayName(name); //update the name parament for the user
-    // return userCredential.user; //return the newuser
     return userCredential;
   }
 
@@ -44,8 +48,8 @@ class Firebaseauthservice implements Auth {
   }
 
   @override
-  void sendEmailVerification(User? user) {
-    user?.sendEmailVerification();
+  Future sendEmailVerification(User? user) async {
+    return await user?.sendEmailVerification();
   }
 }
 
@@ -54,10 +58,10 @@ class FinanceappProvider with ChangeNotifier {
   late String errormessage;
   late UserCredential userCredential;
 
-  final firebaseauth = Firebaseauthservice();
+  final _firebaseauth = Firebaseauthservice();
 
   User? currentuser() {
-    return firebaseauth.getCurrentUser();
+    return _firebaseauth.getCurrentUser();
   }
 
   Future createuser(String name, String email, String password) async {
@@ -67,8 +71,8 @@ class FinanceappProvider with ChangeNotifier {
     // await Future.delayed(Duration(seconds: 4));
 
     try {
-      userCredential = await firebaseauth.createUser(name, email, password);
-      firebaseauth.sendEmailVerification(currentuser());
+      userCredential = await _firebaseauth.createUser(name, email, password);
+      await _firebaseauth.sendEmailVerification(currentuser());
       isloading = false;
       notifyListeners();
 
@@ -79,6 +83,41 @@ class FinanceappProvider with ChangeNotifier {
       isloading = false;
       notifyListeners();
       return errormessage;
+    }
+  }
+
+  Future loginUser(String email, String password) async {
+    isloading = true;
+    notifyListeners();
+
+    try {
+      userCredential = await _firebaseauth.loginUser(email, password);
+      isloading = false;
+      notifyListeners();
+
+      return userCredential;
+    } catch (e) {
+      errormessage = e.toString();
+      isloading = false;
+      notifyListeners();
+      return errormessage;
+    }
+  }
+
+  Future reloadUser() async {
+    try {
+      await _firebaseauth.getCurrentUser()?.reload();
+    } catch (e) {
+      errormessage = e.toString();
+    }
+  }
+
+  Future resendemailverifcation() async {
+    try {
+      await _firebaseauth.sendEmailVerification(currentuser());
+    } catch (e) {
+      errormessage = e.toString();
+      errormessage;
     }
   }
 }

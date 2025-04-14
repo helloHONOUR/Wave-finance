@@ -72,48 +72,53 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<FinanceappProvider>(context, listen: false);
+    final provider = Provider.of<FinanceappProvider>(context, listen: true);
     final user = provider.currentuser();
     // final userEmail = FirebaseAuth.instance.currentUser?.email ?? '';
 
     return Scaffold(
-      body: Container(
-        padding: EdgeInsets.only(left: 20, right: 20),
-        child: Column(
-          children: [
-            Align(alignment: Alignment.topLeft, child: CustomPaint(size: Size(50, 150), painter: Logo(100))),
-            Container(
-              alignment: Alignment.topLeft,
-              padding: EdgeInsets.only(bottom: 10, top: 10),
-              child: Text('Verify Your Email', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
-            ),
-            //
-            Container(
-              padding: EdgeInsets.only(top: 30),
-              alignment: Alignment.center,
-              child: Image.asset('assets/send.png', height: 200, width: 150),
-
-              //  Icon(Icons.email_outlined, size: 100, color: Colors.blueAccent),
-            ),
-            SizedBox(height: 20),
-            Container(
-              padding: EdgeInsets.only(bottom: 10, top: 10),
-              child: Text('Verification email sent to:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300)),
-            ),
-            // Text('Verification email sent to', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
-            Text(
-              '${user?.email}',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w400,
-                color: const Color.fromARGB(1000, 50, 66, 154),
+      body: SafeArea(
+        child: Container(
+          padding: EdgeInsets.only(left: 20, right: 20, top: 60),
+          child: Column(
+            children: [
+              Container(
+                // color: Colors.black,
+                height: 40,
+                child: Align(alignment: Alignment.topLeft, child: CustomPaint(size: Size(35, 35), painter: Logo(0))),
               ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 30),
-            customButton(
-              () {
-                if (user?.emailVerified ?? false) {
+              Container(
+                alignment: Alignment.topLeft,
+                padding: EdgeInsets.only(bottom: 10, top: 20),
+                child: Text('Verify Your Email', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+              ),
+              //
+              Container(
+                padding: EdgeInsets.only(top: 30),
+                alignment: Alignment.center,
+                child: Image.asset('assets/send.png', height: 200, width: 150),
+
+                //  Icon(Icons.email_outlined, size: 100, color: Colors.blueAccent),
+              ),
+              SizedBox(height: 20),
+              Container(
+                padding: EdgeInsets.only(bottom: 10, top: 10),
+                child: Text('Verification email sent to:', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w300)),
+              ),
+              // Text('Verification email sent to', style: TextStyle(fontSize: 18), textAlign: TextAlign.center),
+              Text(
+                '${user?.email}',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w400,
+                  color: const Color.fromARGB(1000, 50, 66, 154),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 30),
+              customButton(
+                () {
+                  provider.isloading = false;
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -122,37 +127,38 @@ class _VerifyEmailScreenState extends State<VerifyEmailScreen> {
                       },
                     ),
                   );
-                }
-              },
-              'Back to login',
-              false,
-            ),
-            // ElevatedButton.icon(
-            //   onPressed: () {},
-            //   //  _canResendEmail ? sendVerificationEmail : null,
-            //   icon: Icon(Icons.send),
-            //   label: Text('Resend Email'),
-            //   style: ElevatedButton.styleFrom(
-            //     backgroundColor: Color(0xFF32429A),
-            //     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-            //   ),
-            // ),
-            SizedBox(height: 20),
+                },
+                'Back to login',
+                false,
+              ),
+              // ElevatedButton.icon(
+              //   onPressed: () {},
+              //   //  _canResendEmail ? sendVerificationEmail : null,
+              //   icon: Icon(Icons.send),
+              //   label: Text('Resend Email'),
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: Color(0xFF32429A),
+              //     padding: EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+              //   ),
+              // ),
+              SizedBox(height: 20),
 
-            SizedBox(height: 30),
-            Text(
-              "Didn’t receive it? Click the resend email",
-              style: TextStyle(fontSize: 14, color: Colors.grey),
-              textAlign: TextAlign.center,
-            ),
+              SizedBox(height: 30),
+              Text(
+                "Didn’t receive it? Click the resend email",
+                style: TextStyle(fontSize: 14, color: Colors.grey),
+                textAlign: TextAlign.center,
+              ),
 
-            TextButton(
-              onPressed: () {
-                // FirebaseAuth.instance.signOut();
-              },
-              child: Text('Resend email'),
-            ),
-          ],
+              TextButton(
+                onPressed: () {
+                  // FirebaseAuth.instance.signOut();
+                  provider.resendemailverifcation();
+                },
+                child: Text('Resend email'),
+              ),
+            ],
+          ),
         ),
       ),
     );
